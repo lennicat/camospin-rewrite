@@ -1,23 +1,29 @@
-import React from "react";
+import React, { useEffect } from "react";
 import camo from "./camospin.webp";
 import audiofile from "./loop.mp3"
 import { Dialog, DialogActions, Button} from "@mui/material";
 
-const spinAudio = new Audio(audiofile);
-spinAudio.loop = true;
-
-function fireAudio() {
-    console.log("it worked dumbass");
-    spinAudio.play();
-}
-
 function OpenDialog() {
     const [open, setOpen] = React.useState(true);
 
+
     const handleClose = () => {
         setOpen(false);
-        fireAudio();
     };
+
+    const [agreed, setAgreed] = React.useState(false);
+
+    const handleSong = () => {
+        setAgreed(true);
+    };
+
+    useEffect(() => {
+        if (agreed) {
+            var audio = new Audio(audiofile);
+            audio.loop = true;
+            audio.play();
+        }
+    }, [agreed]);
 
     return (
         <Dialog
@@ -28,7 +34,13 @@ function OpenDialog() {
         >
             <DialogActions>
                 <div className="flex justify-center">
-                    <Button onClick={handleClose} autoFocus>
+                    <Button
+                        onClick={() => {
+                            handleSong();
+                            handleClose();
+                        }}
+                        autoFocus
+                    >
                         Agree
                     </Button>
                     <Button onClick={handleClose}>Disagree</Button>
